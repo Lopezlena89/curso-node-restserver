@@ -1,12 +1,13 @@
 const {response, request} = require('express');
+const Usuario = require('../models/usuario');
 
 
 const usuariosGet = ( req = request,res = response ) => {
 
-    const {q, nombre = 'No name', apikey, page = 1, limit} = req.query;
-    
+    const {q,nombre = 'No name',apikey,page = 1, limit} = req.query;
+
     res.json({
-        msg:'get API - controlador',
+        msg:'Get API - usuarioGet',
         q,
         nombre,
         apikey,
@@ -14,30 +15,35 @@ const usuariosGet = ( req = request,res = response ) => {
         limit
     });
 }
-const usuariosPut = ( req,res ) => {
-
-    const { id } = req.params;
+    
+const usuariosPut = ( req,res = response ) => {
 
     res.json({
-        msg:'put API - usuarioPost',
+        msg:'Put API - usuarioPut'
+    });
+}
+const usuariosPost = async( req,res = response ) => {
+
+    const body = req.body;
+    const usuario = new Usuario(body);
+
+    await usuario.save();
+
+    res.json({
+        usuario
+    });
+   
+}
+const usuariosDelete = ( req,res=response ) => {
+
+    const {id} = req.params;
+
+    res.json({
+        msg:'delete API - usuarioDelete',
         id
     });
 }
-const usuariosaPost = ( req,res ) => {
-     
-    const {nombre,edad} = req.body;
-    res.json({
-        msg:'post API - usuarioPut',
-        nombre,
-        edad
-    });
-}
-const usuariosDelete = ( req,res ) => {
-    res.json({
-        msg:'delete API - usuarioDelete'
-    });
-}
-const usuariosPatch = ( req,res ) => {
+const usuariosPatch = ( req,res=response ) => {
     res.json({
         msg:'patch API - usuarioPatch'
     });
@@ -47,7 +53,7 @@ const usuariosPatch = ( req,res ) => {
 module.exports = {
     usuariosGet,
     usuariosPut,
-    usuariosaPost,
+    usuariosPost,
     usuariosDelete,
     usuariosPatch
 
